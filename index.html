@@ -8,7 +8,8 @@
       body,
       html {
         font-family: Helvetica;
-        color: white;
+        color: black;
+        background-color: black;
       }
 
       canvas {
@@ -38,6 +39,9 @@
 
       circle {
         pointer-events: all;
+        stroke: darkgrey;
+        stroke-width: 1;
+        fill: dimgrey;
       }
     </style>
   </head>
@@ -83,7 +87,7 @@
       // I don't use margins for this graph, but they are included because they are helpful for properly offsetting the canvas particles in tick() and drawParticlePathOnCanvas() below
       let margin = { top: 0, right: 0, bottom: 0, left: 0 };
 
-      let nodeRadius = 20;
+      let nodeRadius = 10;
 
       var simulation = d3
         .forceSimulation()
@@ -96,16 +100,6 @@
         .force("x", d3.forceX(w / 2))
         .force("y", d3.forceY(h / 2))
         .on("tick", ticked);
-
-      // Colors generated from "I want hue": http://tools.medialab.sciences-po.fr/iwanthue/
-      const colors = d3.scaleOrdinal([
-        "#cb614b",
-        "#6893ca",
-        "#ba9c37",
-        "#9264cb",
-        "#67a057",
-        "#c75c90",
-      ]);
 
       let linkScale = d3.scaleLinear().domain([0, 1]).range([1, nodeRadius]);
 
@@ -126,7 +120,8 @@
       // Set the link attributes for `line` and particles
       dataset.links.forEach((link) => {
         link.transitionRate = getRandomInt(1);
-        link.width = f(linkScale(link.transitionRate));
+        //link.width = f(linkScale(link.transitionRate));
+        link.width = 1;
       });
 
       dataset.links.forEach((link) => {
@@ -158,9 +153,9 @@
         .enter()
         .append("circle")
         .attr("r", nodeRadius)
-        .style("fill", function (d, i) {
+        /*.style("fill", function (d, i) {
           return colors(dataset.nodes[i].category);
-        })
+        })*/
         .call(
           d3
             .drag() //Define what to do on drag events
@@ -273,7 +268,7 @@
         // Set the canvas before drawing updated particles
         context.clearRect(0, 0, w, h);
 
-        context.fillStyle = colors(7); // particle color
+        context.fillStyle = "#FFFFFF"; // particle color
         context.lineWidth = "50px";
 
         // For each particle `p` in particles find the current position and draw to the canvas
